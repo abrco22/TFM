@@ -15,11 +15,20 @@ Analiza el siguiente contrato inteligente escrito en Solidity e identifica vulne
 * Identifica flujo principal de fondos y estado.
 
 ### 2. ANÁLISIS DE SEGURIDAD (OWASP + SWC)
-Analiza el código buscando vulnerabilidades en:
-* Reentrancy, Access Control / Authorization, Integer / Logic Errors.
-* Unsafe External Calls, Front-running / MEV, Oracle manipulation.
-* Economic attacks (drain, inflation, unfair payouts), DoS vectors.
-* Delegatecall / upgrade risks, Business logic inconsistencies.
+Analiza el código buscando vulnerabilidades según esta clasificación: 
+
+**Importante usar esta categoría  **OWASP Smart Contract Top 10 2026**:
+
+* SC01:2026 Access Control:  Fallos en la granularidad de los permisos del contrato, permitiendo a entidades no autorizadas invocar funciones de administración críticas debido a la omisión o mala configuración de modificadores de estado. 
+* SC02:2026 Business Logic Errors: Desconexión entre la intención del sistema y la ejecución algorítmica real del código. El programa es válido sintácticamente pero expone fallos en el diseño de sus flujos transaccionales.
+* SC03:2026 Price Oracle Manipulation:Vulnerabilidad que ocurre cuando el contrato confía de manera ingenua en fuentes de datos u oráculos centralizados o fácilmente manipulables mediante variaciones abruptas de liquidez. 
+* SC04:2026 Flash Loan-Facilitated Attacks: Explotación de la liquidez temporal masiva que proporcionan los préstamos relámpago en una misma transacción, utilizándola para alterar los equilibrios de precio en fondos de liquidez (pools) y arbitrage malicioso. 
+* SC05:2026 Lack of Input Validation: Ausencia de restricciones operativas en los argumentos de entrada de las funciones públicas, abriendo la puerta a datos corruptos o desbordamientos de parámetros.
+* SC06:2026 Uncheked External Calls: Transferencia de flujo de control a contratos de terceros sin validar el valor de retorno del éxito de la llamada (low-level calls), lo que desestabiliza el estado interno del contrato emisor si la llamada falla. 
+* SC07:2026 Arithmetic Errors: Errores de lógica matemática derivados de truncamientos en divisiones o imprecisiones en el manejo de puntos fijos dentro de la EVM, a pesar de las protecciones nativas contra desbordamientos.
+* SC08:2026 Reentracy Attacks: Vulnerabilidad clásica en la que un contrato externo malicioso interrumpe la ejecución de una transferencia y vuelve a invocar recursivamente la función de retiro antes de que el contrato de origen pueda actualizar su balance de estado. 
+* SC09:2026 Integer Overflow and Underflkow: Desbordamiento numérico por almacenamiento matemático fuera de los rangos de representación de las variables primitivas (por ejemplo, uint256), relevante especialmente en bases de código heredadas o que utilizan bloques unchecked de forma insegura.
+* SC10:2026 Proxy & Upgradeability Vulnerabilities: Fallos de seguridad derivados del uso de contratos proxy, colisión de almacenamiento (storage collisions) o inicializaciones defectuosas que permiten el secuestro de la lógica del contrato de implementación
 
 **IMPORTANTE:**
 * Referencia **SWC Registry** cuando sea posible.
@@ -64,6 +73,7 @@ Después de la tabla incluye:
 * Coverage_estimate: (0 a 1, porcentaje del contrato analizado)
 * Risk_score: (0 a 100 basado en severidad agregada)
 
+Por último, genera además PDF de una sola página con un resumen visual de la auditoría.
 
 ### 7. GOLD STANDARD EVALUATION
 Si se proporciona ground truth, compara:
@@ -79,7 +89,6 @@ Si se proporciona ground truth, compara:
 * Recall: X
 * F1: X
 
-Todo el contenido del informe debe ser generado con una estructura clara y muy visual.
 ---
 
 ## CONTRATO A ANALIZAR:
